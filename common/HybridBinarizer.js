@@ -35,7 +35,7 @@ ZXing.Common.HybridBinarizer.prototype.get_BlackMatrix = function () {
     return this.matrix;
 };
 
-module.exports.ZXing.HybridBinarizer = ZXing.HybridBinarizer;
+exports.ZXing.HybridBinarizer = ZXing.HybridBinarizer;
 
 ZXing.Common.HybridBinarizer.prototype.createBinarizer = function (source) {
     return new ZXing.Common.HybridBinarizer(source);

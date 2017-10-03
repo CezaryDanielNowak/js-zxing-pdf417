@@ -1,5 +1,6 @@
-module.exports = function(grunt) {
+var minimist = require('minimist');
 
+module.exports = function(grunt) {
   var config = {
     pkg: grunt.file.readJSON('package.json'),
 
@@ -74,6 +75,21 @@ module.exports = function(grunt) {
     }
   };
 
+  var options = minimist(process.argv.slice(2), {
+    target: 'commonjs'
+  });
+
+  if (options.target === 'worker') {
+    config.concat.dist.options = {
+      banner: '(function(exports, Error, Uin8Array, Uint32Array, BigInteger, undefined){\n',
+      footer: "\n}(self, Error, Uint8Array, Uint32Array, self.bigInt));\n"
+    };
+    config.concat.dist.dest = 'dist/zxing-pdf417.worker.js';
+    config.uglify.dist = {
+      src: 'dist/zxing-pdf417.worker.js',
+      dest: 'dist/zxing-pdf417.worker.min.js'
+    };
+  }
 
   grunt.initConfig(config);
 

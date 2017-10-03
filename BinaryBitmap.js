@@ -40,7 +40,7 @@ ZXing.BinaryBitmap = function (binarizer) {
     }
 };
 
-module.exports.ZXing.BinaryBitmap = ZXing.BinaryBitmap;
+exports.ZXing.BinaryBitmap = ZXing.BinaryBitmap;
 
 ZXing.BinaryBitmap.prototype.get_Width = function () {
     return this.binarizer.get_Width();

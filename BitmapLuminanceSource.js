@@ -35,13 +35,13 @@ ZXing.BitmapLuminanceSource = function (bitmap, w, h) {
       width = w;
       height = h;
       data = bitmap;
-    } /* NOTE: the following commented-out code was removed for 'Coinme-interop-wis' repository's WIS-4000
-               ID scanner PDF417 barcode to be decoded properly.   */
-      /*else if (bitmap instanceof ImageData) {
+    } else if (bitmap instanceof ImageData) {
+      // bitmap is:
+      // canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
       width = w || bitmap.width;
       height = h || bitmap.height;
       data = bitmap.data;
-    }*/ else {
+    } else {
       canvas = w;
       width = canvas.naturalWidth || canvas.width;
       height = canvas.naturalHeight || canvas.height;
@@ -78,7 +78,7 @@ ZXing.BitmapLuminanceSource = function (bitmap, w, h) {
   }
 };
 
-module.exports.ZXing.BitmapLuminanceSource = ZXing.BitmapLuminanceSource;
+exports.ZXing.BitmapLuminanceSource = ZXing.BitmapLuminanceSource;
 
 ZXing.BitmapLuminanceSource.prototype.CreateLuminanceSource = function (newLuminances, width, height) {
   return (function () {

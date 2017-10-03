@@ -17,6 +17,13 @@ Build
   
   grunt
 
+Build for WebWorker
+-----
+
+  npm install
+  
+  grunt --target=worker
+
 API
 -----
 Example - crop an image context:
