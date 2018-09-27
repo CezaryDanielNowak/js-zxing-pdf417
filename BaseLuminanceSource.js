@@ -32,13 +32,13 @@ ZXing.BaseLuminanceSource.BChannelWeight = 7424;
 ZXing.BaseLuminanceSource.ChannelWeight = 16;
 
 ZXing.BaseLuminanceSource = function (luminanceArray, width, height) {
-    this.luminances = [];
     if (luminanceArray instanceof Array) {
         this.luminances = luminanceArray.slice(0);
     } else {
         var w = luminanceArray;
         height = width;
         width = w;
+        this.luminances = [];
     }
     ZXing.LuminanceSource.call(this, width, height);
 };

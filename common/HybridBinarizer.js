@@ -69,21 +69,21 @@ ZXing.Common.HybridBinarizer.calculateThresholdForBlock = function (luminances, 
     var maxYOffset = height - 8;
     var maxXOffset = width - 8;
     var top, yoffset, xoffset, left, sum, blackRow, average;
-
-    for (var y = 0; y < subHeight; y++) {
+    var x, y, z;
+    for (y = 0; y < subHeight; y++) {
         yoffset = y << 3;
         if (yoffset > maxYOffset) {
             yoffset = maxYOffset;
         }
         top = ZXing.Common.HybridBinarizer.cap(y, 2, subHeight - 3);
-        for (var x = 0; x < subWidth; x++) {
+        for (x = 0; x < subWidth; x++) {
             xoffset = x << 3;
             if (xoffset > maxXOffset) {
                 xoffset = maxXOffset;
             }
             left = ZXing.Common.HybridBinarizer.cap(x, 2, subWidth - 3);
             sum = 0;
-            for (var z = -2; z <= 2; z++) {
+            for (z = -2; z <= 2; z++) {
                 blackRow = blackPoints[top + z];
                 sum += blackRow[left - 2];
                 sum += blackRow[left - 1];
@@ -101,10 +101,10 @@ ZXing.Common.HybridBinarizer.cap = function (value, min, max) {
 };
 ZXing.Common.HybridBinarizer.thresholdBlock = function (luminances, xoffset, yoffset, threshold, stride, matrix) {
     var offset = (yoffset * stride) + xoffset;
-    var pixel;
+    var pixel, y, x;
 
-    for (var y = 0; y < 8; y++, offset += stride) {
-        for (var x = 0; x < 8; x++) {
+    for (y = 0; y < 8; y++, offset += stride) {
+        for (x = 0; x < 8; x++) {
             pixel = luminances[offset + x] & 255;
             matrix.set_Item(xoffset + x, yoffset + y, (pixel <= threshold));
         }

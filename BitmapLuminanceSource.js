@@ -54,11 +54,12 @@ ZXing.BitmapLuminanceSource = function (bitmap, w, h) {
 
     if (debug) this.debugBitmap = [];
     //console.time("luminances")
-    for(var y = 0; y < height; y++) {
+    var x, y;
+    for(y = 0; y < height; y++) {
       var strideOffset = y * stride;
 
       var maxIndex = (4 * width) + strideOffset;
-      for(var x = strideOffset; x < maxIndex; x += 4) {
+      for (x = strideOffset; x < maxIndex; x += 4) {
         var luminance = ((7424 * data[x] + 38550 * data[x + 1] + 19562 * data[x + 2]) >> 16);
         //var alpha = data[x + 3];
         //luminance = (((luminance * alpha) >> 8) + (255 * (255 - alpha) >> 8) + 1);

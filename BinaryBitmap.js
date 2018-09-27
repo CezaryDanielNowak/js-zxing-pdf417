@@ -52,7 +52,7 @@ ZXing.BinaryBitmap.prototype.getBlackRow = function (y, row) {
     return this.binarizer.getBlackRow(y, row);
 };
 ZXing.BinaryBitmap.prototype.get_BlackMatrix = function () {
-    return (this.matrix ? this.matrix : (this.matrix = this.binarizer.get_BlackMatrix()));
+    return this.matrix ? this.matrix : (this.matrix = this.binarizer.get_BlackMatrix());
 };
 ZXing.BinaryBitmap.prototype.get_CropSupported = function () {
     return this.binarizer.get_LuminanceSource().get_CropSupported();

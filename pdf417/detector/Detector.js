@@ -43,7 +43,7 @@ ZXing.PDF417.Internal.Detector.detectSingle = function (image, hints, multiple) 
     var barcodeCoordinates = ZXing.PDF417.Internal.Detector.detectMultiple(multiple, bitMatrix);
     if (barcodeCoordinates == null || barcodeCoordinates.length == 0) {
         //bitMatrix = $.extend({}, bitMatrix, true);
-        bitMatrix = new ZXing.Common.BitMatrix(bitMatrix.width, bitMatrix.height, bitMatrix.rowSize, JSON.parse(JSON.stringify(bitMatrix.bits)));
+        bitMatrix = bitMatrix.Clone();
         bitMatrix.rotate180();
         barcodeCoordinates = ZXing.PDF417.Internal.Detector.detectMultiple(multiple, bitMatrix);
     }
@@ -112,11 +112,12 @@ ZXing.PDF417.Internal.Detector.findRowsWithPattern = function (matrix, height, w
     var result = new Array(4);
     var found = false;
     var counters = new Array(pattern.length);
+    var previousRowLoc, loc;
     for (; startRow < height; startRow += 5) {
-        var loc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
+        loc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
         if (loc != null) {
             while (startRow > 0) {
-                var previousRowLoc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
+                previousRowLoc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
                 if (previousRowLoc != null) {
                     loc = previousRowLoc;
                 }

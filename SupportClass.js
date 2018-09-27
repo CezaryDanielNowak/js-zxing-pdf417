@@ -41,13 +41,13 @@ if (typeof (Int32Array) == "undefined") {
 
 if (typeof ($Inherit) == 'undefined') {
     var $Inherit = function (ce, ce2) {
-
+        var p;
         if (typeof (Object.getOwnPropertyNames) == 'undefined') {
 
-            for (var p in ce2.prototype)
+            for (p in ce2.prototype)
                 if (typeof (ce.prototype[p]) == 'undefined' || ce.prototype[p] == Object.prototype[p])
                     ce.prototype[p] = ce2.prototype[p];
-            for (var p in ce2)
+            for (p in ce2)
                 if (typeof (ce[p]) == 'undefined')
                     ce[p] = ce2[p];
             ce.$baseCtor = ce2;
@@ -59,15 +59,15 @@ if (typeof ($Inherit) == 'undefined') {
                 if (typeof (Object.getOwnPropertyDescriptor(ce.prototype, props[i])) == 'undefined')
                     Object.defineProperty(ce.prototype, props[i], Object.getOwnPropertyDescriptor(ce2.prototype, props[i]));
 
-            for (var p in ce2)
+            for (p in ce2)
                 if (typeof (ce[p]) == 'undefined')
                     ce[p] = ce2[p];
             ce.$baseCtor = ce2;
 
         }
 
-    }
-};
+    };
+}
 
 function ArrayCopy(source, sourceIndex, dest, destIndex, n) {
     n = typeof n != 'undefined' ? n : source.length;
@@ -170,6 +170,7 @@ ZXing.SupportClass.GetCharsFromString = function (sourceString, sourceStart, sou
 };
 ZXing.SupportClass.SetCapacity = function (vector, newCapacity) {
     while (newCapacity > vector.length)
+        // What is T ???
         vector.push(new T());
     while (newCapacity < vector.length)
         vector.splice(newCapacity, vector.length - newCapacity);

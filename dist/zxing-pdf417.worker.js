@@ -42,13 +42,13 @@ if (typeof (Int32Array) == "undefined") {
 
 if (typeof ($Inherit) == 'undefined') {
     var $Inherit = function (ce, ce2) {
-
+        var p;
         if (typeof (Object.getOwnPropertyNames) == 'undefined') {
 
-            for (var p in ce2.prototype)
+            for (p in ce2.prototype)
                 if (typeof (ce.prototype[p]) == 'undefined' || ce.prototype[p] == Object.prototype[p])
                     ce.prototype[p] = ce2.prototype[p];
-            for (var p in ce2)
+            for (p in ce2)
                 if (typeof (ce[p]) == 'undefined')
                     ce[p] = ce2[p];
             ce.$baseCtor = ce2;
@@ -60,15 +60,15 @@ if (typeof ($Inherit) == 'undefined') {
                 if (typeof (Object.getOwnPropertyDescriptor(ce.prototype, props[i])) == 'undefined')
                     Object.defineProperty(ce.prototype, props[i], Object.getOwnPropertyDescriptor(ce2.prototype, props[i]));
 
-            for (var p in ce2)
+            for (p in ce2)
                 if (typeof (ce[p]) == 'undefined')
                     ce[p] = ce2[p];
             ce.$baseCtor = ce2;
 
         }
 
-    }
-};
+    };
+}
 
 function ArrayCopy(source, sourceIndex, dest, destIndex, n) {
     n = typeof n != 'undefined' ? n : source.length;
@@ -171,6 +171,7 @@ ZXing.SupportClass.GetCharsFromString = function (sourceString, sourceStart, sou
 };
 ZXing.SupportClass.SetCapacity = function (vector, newCapacity) {
     while (newCapacity > vector.length)
+        // What is T ???
         vector.push(new T());
     while (newCapacity < vector.length)
         vector.splice(newCapacity, vector.length - newCapacity);
@@ -501,7 +502,7 @@ ZXing.BinaryBitmap.prototype.getBlackRow = function (y, row) {
     return this.binarizer.getBlackRow(y, row);
 };
 ZXing.BinaryBitmap.prototype.get_BlackMatrix = function () {
-    return (this.matrix ? this.matrix : (this.matrix = this.binarizer.get_BlackMatrix()));
+    return this.matrix ? this.matrix : (this.matrix = this.binarizer.get_BlackMatrix());
 };
 ZXing.BinaryBitmap.prototype.get_CropSupported = function () {
     return this.binarizer.get_LuminanceSource().get_CropSupported();
@@ -838,13 +839,13 @@ ZXing.BaseLuminanceSource.BChannelWeight = 7424;
 ZXing.BaseLuminanceSource.ChannelWeight = 16;
 
 ZXing.BaseLuminanceSource = function (luminanceArray, width, height) {
-    this.luminances = [];
     if (luminanceArray instanceof Array) {
         this.luminances = luminanceArray.slice(0);
     } else {
         var w = luminanceArray;
         height = width;
         width = w;
+        this.luminances = [];
     }
     ZXing.LuminanceSource.call(this, width, height);
 };
@@ -962,11 +963,12 @@ ZXing.BitmapLuminanceSource = function (bitmap, w, h) {
 
     if (debug) this.debugBitmap = [];
     //console.time("luminances")
-    for(var y = 0; y < height; y++) {
+    var x, y;
+    for(y = 0; y < height; y++) {
       var strideOffset = y * stride;
 
       var maxIndex = (4 * width) + strideOffset;
-      for(var x = strideOffset; x < maxIndex; x += 4) {
+      for (x = strideOffset; x < maxIndex; x += 4) {
         var luminance = ((7424 * data[x] + 38550 * data[x + 1] + 19562 * data[x + 2]) >> 16);
         //var alpha = data[x + 3];
         //luminance = (((luminance * alpha) >> 8) + (255 * (255 - alpha) >> 8) + 1);
@@ -2024,21 +2026,21 @@ ZXing.Common.HybridBinarizer.calculateThresholdForBlock = function (luminances, 
     var maxYOffset = height - 8;
     var maxXOffset = width - 8;
     var top, yoffset, xoffset, left, sum, blackRow, average;
-
-    for (var y = 0; y < subHeight; y++) {
+    var x, y, z;
+    for (y = 0; y < subHeight; y++) {
         yoffset = y << 3;
         if (yoffset > maxYOffset) {
             yoffset = maxYOffset;
         }
         top = ZXing.Common.HybridBinarizer.cap(y, 2, subHeight - 3);
-        for (var x = 0; x < subWidth; x++) {
+        for (x = 0; x < subWidth; x++) {
             xoffset = x << 3;
             if (xoffset > maxXOffset) {
                 xoffset = maxXOffset;
             }
             left = ZXing.Common.HybridBinarizer.cap(x, 2, subWidth - 3);
             sum = 0;
-            for (var z = -2; z <= 2; z++) {
+            for (z = -2; z <= 2; z++) {
                 blackRow = blackPoints[top + z];
                 sum += blackRow[left - 2];
                 sum += blackRow[left - 1];
@@ -2056,10 +2058,10 @@ ZXing.Common.HybridBinarizer.cap = function (value, min, max) {
 };
 ZXing.Common.HybridBinarizer.thresholdBlock = function (luminances, xoffset, yoffset, threshold, stride, matrix) {
     var offset = (yoffset * stride) + xoffset;
-    var pixel;
+    var pixel, y, x;
 
-    for (var y = 0; y < 8; y++, offset += stride) {
-        for (var x = 0; x < 8; x++) {
+    for (y = 0; y < 8; y++, offset += stride) {
+        for (x = 0; x < 8; x++) {
             pixel = luminances[offset + x] & 255;
             matrix.set_Item(xoffset + x, yoffset + y, (pixel <= threshold));
         }
@@ -2288,7 +2290,7 @@ ZXing.PDF417.Internal.Detector.detectSingle = function (image, hints, multiple) 
     var barcodeCoordinates = ZXing.PDF417.Internal.Detector.detectMultiple(multiple, bitMatrix);
     if (barcodeCoordinates == null || barcodeCoordinates.length == 0) {
         //bitMatrix = $.extend({}, bitMatrix, true);
-        bitMatrix = new ZXing.Common.BitMatrix(bitMatrix.width, bitMatrix.height, bitMatrix.rowSize, JSON.parse(JSON.stringify(bitMatrix.bits)));
+        bitMatrix = bitMatrix.Clone();
         bitMatrix.rotate180();
         barcodeCoordinates = ZXing.PDF417.Internal.Detector.detectMultiple(multiple, bitMatrix);
     }
@@ -2357,11 +2359,12 @@ ZXing.PDF417.Internal.Detector.findRowsWithPattern = function (matrix, height, w
     var result = new Array(4);
     var found = false;
     var counters = new Array(pattern.length);
+    var previousRowLoc, loc;
     for (; startRow < height; startRow += 5) {
-        var loc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
+        loc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, startRow, width, false, pattern, counters);
         if (loc != null) {
             while (startRow > 0) {
-                var previousRowLoc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
+                previousRowLoc = ZXing.PDF417.Internal.Detector.findGuardPattern(matrix, startColumn, --startRow, width, false, pattern, counters);
                 if (previousRowLoc != null) {
                     loc = previousRowLoc;
                 }
