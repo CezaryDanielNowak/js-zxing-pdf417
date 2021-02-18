@@ -13,6 +13,8 @@ http://peculiarventures.github.io/js-zxing-pdf417
 Build
 -----
 
+  npm install -g grunt-cli
+
   npm install
   
   grunt
